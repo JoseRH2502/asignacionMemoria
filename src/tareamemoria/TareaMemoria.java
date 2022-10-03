@@ -34,16 +34,15 @@ public class TareaMemoria {
         
         HashMap a = ff.getAsignacion();
         System.out.println("Admin FF");
-        System.out.println("ID \t\t Pos");
-        System.out.println(p1.getId()+ " \t\t "+a.get(p1.getId()).toString());
-        System.out.println(p2.getId()+ " \t\t "+a.get(p2.getId()).toString());
-        System.out.println(p3.getId()+ " \t\t "+a.get(p3.getId()).toString());
-        System.out.println(p4.getId()+ " \t\t "+a.get(p4.getId()).toString());
+        System.out.println("ID \t\t MemP \t\t Pos");
+        System.out.println(p1.getId()+ " \t\t "+ p1.getMemoria()+" \t\t " +a.get(p1.getId()).toString());
+        System.out.println(p2.getId()+ " \t\t "+ p2.getMemoria()+" \t\t " +a.get(p2.getId()).toString());
+        System.out.println(p3.getId()+ " \t\t "+ p3.getMemoria()+" \t\t " + a.get(p3.getId()).toString());
+        System.out.println(p4.getId()+ " \t\t "+ p4.getMemoria()+" \t\t " + a.get(p4.getId()).toString());
         System.out.println("\n");
         
-        System.out.println("Memoria disponible:");
-       // System.out.println(a.get(p2.getId()).toString());
-        int m[]= ff.getBloqueMemoria();
+        System.out.println("Memoria disponible FF:");
+        int m[] = ff.getBloqueMemoria();
         for (int i = 0; i < m.length; i++){
            System.out.println(m[i]);
         }
@@ -56,26 +55,36 @@ public class TareaMemoria {
         bf.agregarProceso(p3);
         bf.agregarProceso(p4);
         
+        
+        
         HashMap a1 = bf.getAsignacion();
         System.out.println("Admin BF");
-        System.out.println("ID \t\t Pos");
-        System.out.println(p1.getId()+ " \t\t "+a1.get(p1.getId()).toString());
-        System.out.println(p2.getId()+ " \t\t "+a1.get(p2.getId()).toString());
-        System.out.println(p3.getId()+ " \t\t "+a1.get(p3.getId()).toString());
-        System.out.println(p4.getId()+ " \t\t "+a1.get(p4.getId()).toString());
+        System.out.println("ID \t\t MemP\t\t Pos");
+        System.out.println(p1.getId()+ " \t\t "+p1.getMemoria()+" \t\t " +a1.get(p1.getId()).toString());
+        System.out.println(p2.getId()+ " \t\t "+p2.getMemoria()+" \t\t " +a1.get(p2.getId()).toString());
+        System.out.println(p3.getId()+ " \t\t "+p3.getMemoria()+" \t\t " +a1.get(p3.getId()).toString());
+        System.out.println(p4.getId()+ " \t\t "+p4.getMemoria()+" \t\t " +a1.get(p4.getId()).toString());
         System.out.println("\n");
         
-        System.out.println("Memoria disponible:");
+        System.out.println("Memoria disponible BF:");
         int m1[]= bf.getBloqueMemoria();
         for (int i = 0; i < m1.length; i++){
-           System.out.println(m[i]);
+           System.out.println(m1[i]);
         }
         System.out.println("\n");
          
-        
+        //bf.eliminarProceso(p1);
+        //bf.eliminarProceso(p2);
+        //bf.eliminarProceso(p3);
         //bf.eliminarProceso(p4);
-        //bf.agregarProceso(p4);
-       
+        
+        /*System.out.println("Memoria disponible BF:");
+        int m5[]= bf.getBloqueMemoria();
+        for (int i = 0; i < m5.length; i++){
+           System.out.println(m5[i]);
+        }
+        System.out.println("\n");
+       */
         
         Admin_WorstFit wf = new Admin_WorstFit(bloqueMemoria);
         wf.agregarProceso(p1);
@@ -85,20 +94,31 @@ public class TareaMemoria {
         
         
         HashMap a2 = wf.getAsignacion();
-        System.out.println("Admin WF");
-        System.out.println("ID \t\t Pos");
-        System.out.println(p1.getId()+ " \t\t "+a2.get(p1.getId()).toString());
-        System.out.println(p2.getId()+ " \t\t "+a2.get(p2.getId()).toString());
-        System.out.println(p3.getId()+ " \t\t "+a2.get(p3.getId()).toString());
-        System.out.println(p4.getId()+ " \t\t "+a2.get(p4.getId()).toString());
+       System.out.println("Admin WF");
+        System.out.println("ID \t\t MemP\t\t Pos");
+        System.out.println(p1.getId()+ " \t\t "+p1.getMemoria()+" \t\t " +a2.get(p1.getId()).toString());
+        System.out.println(p2.getId()+ " \t\t "+p2.getMemoria()+" \t\t " +a2.get(p2.getId()).toString());
+        System.out.println(p3.getId()+ " \t\t "+p3.getMemoria()+" \t\t " +a2.get(p3.getId()).toString());
+        System.out.println(p4.getId()+ " \t\t "+p4.getMemoria()+" \t\t " +a2.get(p4.getId()).toString());
         System.out.println("\n");
         
-        System.out.println("Memoria disponible:");
+        System.out.println("Memoria disponible WF:");
         int m2[]= wf.getBloqueMemoria();
         for (int i = 0; i < m2.length; i++){
            System.out.println(m2[i]);
         }
         System.out.println("\n");
+        
+        System.out.println(wf.eliminarProceso(p3));
+        
+        
+        System.out.println("Memoria disponible WF:");
+        int m5[]= wf.getBloqueMemoria();
+        for (int i = 0; i < m5.length; i++){
+           System.out.println(m5[i]);
+        }
+        System.out.println("\n");
+       
         
        
     }

@@ -49,8 +49,8 @@ public class Admin_WorstFit {
         }
     }
     
-     public boolean eliminarProceso(Proceso proceso){
-        if (asignacion.containsKey(proceso.getId())){
+    public boolean eliminarProceso(Proceso proceso){
+        if (Integer.parseInt(asignacion.get(proceso.getId()).toString()) != -1 ){
           int index = Integer.parseInt(asignacion.get(proceso.getId()).toString()) ;
           bloqueMemoria[index] += proceso.getMemoria();
           asignacion.remove(proceso.getId());
