@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package tareamemoria;
+package Clases;
 
 import java.util.HashMap;
 
@@ -11,40 +11,45 @@ import java.util.HashMap;
  *
  * @author Jose
  */
-public class Admin_WorstFit {
+public class Admin_BestFit {
     private int[] bloqueMemoria; 
     private HashMap asignacion;
 
-    public Admin_WorstFit(int[] bloqueMemoria) {
+    public Admin_BestFit(int[] bloqueMemoria) {
         this.bloqueMemoria = new int[bloqueMemoria.length];
         for (int i=0; i<bloqueMemoria.length; i++){
            this.bloqueMemoria[i] = bloqueMemoria[i];
-         }
+        }
+   
         asignacion = new HashMap();  
     }
     
     public void agregarProceso(Proceso proceso){
-        worstFit( proceso);
+        bestFit(proceso);
     }
-    
-    private void worstFit(Proceso proceso){
-        int wstIdx = -1;
-        for (int j=0; j<bloqueMemoria.length; j++){
-            if (bloqueMemoria[j] >= proceso.getMemoria()){
-                    if (wstIdx == -1){
-                        wstIdx = j;
-                    }else if (bloqueMemoria[wstIdx] <bloqueMemoria[j]){
-                        wstIdx = j;
-                    }
+    private void bestFit(Proceso proceso){	
+        int bestIdx = -1;
+        
+        for (int j=0; j<bloqueMemoria.length; j++)
+        {
+            if (bloqueMemoria[j] >= proceso.getMemoria())
+            {
+                if (bestIdx == -1){
+                    bestIdx = j;
+                }else if (bloqueMemoria[bestIdx] > bloqueMemoria[j]){
+                    bestIdx = j;
                 }
             }
-       
-            if (wstIdx != -1){
-                asignacion.put(proceso.getId(), wstIdx);
-                bloqueMemoria[wstIdx] -= proceso.getMemoria();
-            }
-            
-            if (!asignacion.containsKey(proceso.getId())){
+        }
+        
+        
+        if (bestIdx != -1)
+        {   
+            asignacion.put(proceso.getId(),bestIdx);
+            bloqueMemoria[bestIdx] -= proceso.getMemoria();
+        }
+        
+        if (!asignacion.containsKey(proceso.getId())){
             asignacion.put(proceso.getId(), -1);
         }
     }
@@ -60,14 +65,11 @@ public class Admin_WorstFit {
         }
     }
     
-    
-    public int[] getBloqueMemoria() {
-        return bloqueMemoria;
-    }
-
     public HashMap getAsignacion() {
         return asignacion;
     }
     
-    
+    public int[] getBloqueMemoria() {
+        return bloqueMemoria;
+    }   
 }

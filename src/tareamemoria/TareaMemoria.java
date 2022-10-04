@@ -5,7 +5,12 @@
  */
 package tareamemoria;
 
+import Clases.Admin_FirstFit;
+import Clases.Proceso;
+import Clases.Admin_WorstFit;
+import Clases.Admin_BestFit;
 import java.util.HashMap;
+import Controlador.Controlador;
 
 /**
  *
@@ -18,8 +23,13 @@ public class TareaMemoria {
      */
     public static void main(String[] args) {
         // TODO code application logic here
+        Controlador c = new Controlador();
         int[] bloqueMemoria = {100, 500, 200, 300, 600};
   
+            
+        c.agregarProceso();
+        c.agregarProceso();
+        
         Proceso p1 = new Proceso(0, 212, 0);
         Proceso p2 = new Proceso(1, 417, 0);
         Proceso p3 = new Proceso(2, 112, 0);
@@ -119,7 +129,12 @@ public class TareaMemoria {
         }
         System.out.println("\n");
        
-        
+        for (int j=0; j<c.getProcesos().size(); j++){
+            System.out.println( c.getProcesos().get(j));
+           
+        }
+            
+            
        
     }
     

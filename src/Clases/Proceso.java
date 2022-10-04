@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package tareamemoria;
+package Clases;
 
 /**
  *
@@ -44,14 +44,15 @@ public class Proceso {
         this.id = id;
     }
 
+    @Override
+    public String toString() {
+        return "Proceso{" + "id=" + id + ", memoria=" + memoria + ", tiempo=" + tiempo + '}';
+    }
+
    
     
 
-    @Override
-    public String toString() {
-        return "Proceso{" + "memoria=" + memoria + ", tiempo=" + tiempo + '}';
-    }
-    
+   
     
     
 }
