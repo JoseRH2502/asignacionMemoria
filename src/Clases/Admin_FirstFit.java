@@ -16,7 +16,7 @@ import java.util.concurrent.TimeUnit;
  * @author Jose
  */
 public class Admin_FirstFit {   
-     private int[] memoria;
+    private int[] memoria;
     private HashMap bloqueMemoria; 
     private ArrayList<Tupla> asignacion;
     private ArrayList<Proceso> procesos;
