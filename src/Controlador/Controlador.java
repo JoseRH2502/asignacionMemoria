@@ -17,13 +17,13 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.concurrent.TimeUnit;
 
-public class Controlador {
+public class Controlador extends Thread{
     Admin_BestFit bestFit;
     Admin_FirstFit firstFit;
     Admin_WorstFit worstFit;
     ArrayList<Proceso> procesos;
     int idProceso;
-    int tamMemoria = 10;
+    int tamMemoria = 32;
 
     public Controlador() {
         bestFit = new Admin_BestFit(tamMemoria);
@@ -94,6 +94,8 @@ public class Controlador {
     public void setTamMemoria(int tamMemoria) {
         this.tamMemoria = tamMemoria;
     }
+    
+    @Override
     public void run(){
         try {
         int timAgregar = 0;
