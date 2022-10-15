@@ -20,6 +20,7 @@ public class Admin_FirstFit {
     private HashMap bloqueMemoria; 
     private ArrayList<Tupla> asignacion;
     private ArrayList<Proceso> procesos;
+    private  ArrayList<Proceso> rechazados;
     
     public Admin_FirstFit(int tam) {
         memoria = new int[tam];
@@ -29,6 +30,7 @@ public class Admin_FirstFit {
         bloqueMemoria = new HashMap();  
         asignacion = new ArrayList<Tupla>();
         procesos = new ArrayList<Proceso>();
+        rechazados = new ArrayList<>();
         memoriaLibre(); 
     }
     
@@ -46,6 +48,9 @@ public class Admin_FirstFit {
                 asignarMemoria(posMem, proceso);
                 break;
             }   
+        }
+        if(!procesos.contains(proceso)){
+            rechazados.add(proceso);
         }
         
     }
@@ -67,8 +72,7 @@ public class Admin_FirstFit {
         for (int i=pos; i<(pos + proceso.getMemoria() ); i++){
             memoria[i] = proceso.getId();
         }
-        Proceso p = new Proceso(proceso.getId(), proceso.getMemoria(), proceso.getTiempo());
-        procesos.add(p);
+        procesos.add(proceso);
         Tupla asig = new Tupla(proceso.getId(), pos, proceso.getMemoria());
         asignacion.add(asig);
         bloqueMemoria.clear();
@@ -105,7 +109,7 @@ public class Admin_FirstFit {
         }
     }
     
-     public void disminuirTiempo(){
+    /* public void disminuirTiempo(){
         for(Proceso proceso : procesos){
             int tiempo = proceso.getTiempo() -1;
             proceso.setTiempo(tiempo);
@@ -114,7 +118,7 @@ public class Admin_FirstFit {
             }
         }
             
-    }
+    }*/
 
     public ArrayList<Proceso> getProcesos() {
         return procesos;
@@ -131,6 +135,10 @@ public class Admin_FirstFit {
 
     public ArrayList<Tupla> getAsignacion() {
         return asignacion;
+    }
+
+    public ArrayList<Proceso> getRechazados() {
+        return rechazados;
     }
     
 }

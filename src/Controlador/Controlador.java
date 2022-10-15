@@ -99,9 +99,6 @@ public class Controlador {
         int timAgregar = 0;
         while(true){
             TimeUnit.SECONDS.sleep(1);
-            bestFit.disminuirTiempo();
-            firstFit.disminuirTiempo();
-            worstFit.disminuirTiempo();
             timAgregar ++;
             if (timAgregar == 5 ){
                 agregarProceso();

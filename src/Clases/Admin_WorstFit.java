@@ -20,6 +20,7 @@ public class Admin_WorstFit {
     private HashMap bloqueMemoria; 
     private ArrayList<Tupla> asignacion;
     private ArrayList<Proceso> procesos;
+    private  ArrayList<Proceso> rechazados;
 
     public Admin_WorstFit(int tam) {
         memoria = new int[tam];
@@ -29,6 +30,7 @@ public class Admin_WorstFit {
         bloqueMemoria = new HashMap();  
         asignacion = new ArrayList<Tupla>();
         procesos = new ArrayList<Proceso>();
+        rechazados = new ArrayList<>();
         memoriaLibre();
     }
     
@@ -55,6 +57,8 @@ public class Admin_WorstFit {
             if (wstIdx != -1){
                 asignarMemoria(wstIdx, proceso);
                 
+            }else{
+                rechazados.add(proceso);
             }
                   
     }
@@ -76,8 +80,8 @@ public class Admin_WorstFit {
         for (int i=pos; i<(pos + proceso.getMemoria() ); i++){
             memoria[i] = proceso.getId();
         }
-        Proceso p = new Proceso(proceso.getId(), proceso.getMemoria(), proceso.getTiempo());
-        procesos.add(p);
+        //Proceso p = new Proceso(proceso.getId(), proceso.getMemoria(), proceso.getTiempo());
+        procesos.add(proceso);
         Tupla asig = new Tupla(proceso.getId(), pos, proceso.getMemoria());
         asignacion.add(asig);
         bloqueMemoria.clear();
@@ -135,5 +139,14 @@ public class Admin_WorstFit {
     public ArrayList<Tupla> getAsignacion() {
         return asignacion;
     }
+
+    public ArrayList<Proceso> getProcesos() {
+        return procesos;
+    }
+
+    public ArrayList<Proceso> getRechazados() {
+        return rechazados;
+    }
+    
     
 }

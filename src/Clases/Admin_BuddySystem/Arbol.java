@@ -7,6 +7,7 @@ package Clases.Admin_BuddySystem;
 
 import Clases.Proceso;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 /**
  *
@@ -17,10 +18,13 @@ public class Arbol {
     private int[] memoria;
     private int idNode; 
     private Node nodoActual;
+    private ArrayList<Proceso> rechazados;
+   
 
     public Arbol(int tam) {
         idNode = 0;
         arbol = new ArrayList<>();
+        rechazados = new ArrayList<>();
         memoria= new int[tam];
         Node root = new Node(0,-2,tam);
         this.arbol.add(root);  
@@ -31,13 +35,18 @@ public class Arbol {
         
     }
      public void agregarProceso(Proceso proceso){
-         if(arbol.size() == 1){
-             subArbolIzquierdo(proceso);
-             nodoActual.setProceso(proceso);
+         if(esAsignable(proceso.getMemoria())){
+            if(arbol.size() == 1){
+                subArbolIzquierdo(proceso);
+                nodoActual.setProceso(proceso);
+            }else{
+               hojaLibre(proceso);
+               subArbolIzquierdo(proceso);
+               nodoActual.setProceso(proceso);
+            }
          }else{
-            hojaLibre(proceso);
-            subArbolIzquierdo(proceso);
-            nodoActual.setProceso(proceso);
+             rechazados.add(proceso);
+             //System.out.println("Rechazado " + proceso.getId());
          }
          
      }
@@ -175,6 +184,20 @@ public class Arbol {
         return memoriaTraducida;
         
     }
+    
+     private boolean esAsignable(int tam){
+        for(int i=0; i<memoria.length; i++){ 
+            Node nodo = recuperarNodo(memoria[i]);
+            if(nodo.getProceso() == null && nodo.getMemoria() >= tam){
+                //System.out.println("Nodo " + nodo.getId());
+                return true;
+            }
+        }
+        return false;
+       
+    }
+     
+     
     
     public ArrayList<Node> getArbol() {
         return arbol;
