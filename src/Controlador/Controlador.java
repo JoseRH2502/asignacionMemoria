@@ -13,31 +13,34 @@ import Clases.Admin_FirstFit;
 import Clases.Proceso;
 import Clases.Admin_WorstFit;
 import Clases.Admin_BestFit;
+import Clases.Admin_BuddySystem.Arbol;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.concurrent.TimeUnit;
 
-public class Controlador extends Thread{
+public class Controlador {
     Admin_BestFit bestFit;
     Admin_FirstFit firstFit;
     Admin_WorstFit worstFit;
+    Arbol buddySystem;
     ArrayList<Proceso> procesos;
     int idProceso;
-    int tamMemoria = 32;
+    int tamMemoria = 64;
 
     public Controlador() {
         bestFit = new Admin_BestFit(tamMemoria);
         firstFit = new Admin_FirstFit(tamMemoria);
         worstFit = new Admin_WorstFit(tamMemoria);
+        buddySystem = new Arbol(tamMemoria);
         procesos = new ArrayList<Proceso>();
         idProceso = 0;
         
     }
     
     public void agregarProceso(){
-       int memoriaInicial = (int) Math.floor(Math.random()*5);
+       int memoriaInicial = (int) Math.floor(Math.random()*(1-8+1)+8); 
        //int tiempo = (int) Math.floor(Math.random()*(29-301+1)+301); 
-        int tiempo = (int) Math.floor(Math.random()*(10-60+1)+60); 
+       int tiempo = (int) Math.floor(Math.random()*(10-60+1)+60); 
        Proceso  proceso = new Proceso(idProceso, memoriaInicial, tiempo);
        procesos.add(proceso);
        idProceso ++;
@@ -45,84 +48,81 @@ public class Controlador extends Thread{
        bestFit.agregarProceso(proceso);
        firstFit.agregarProceso(proceso);
        worstFit.agregarProceso(proceso);
+       buddySystem.agregarProceso(proceso);
     }
     
-    public Admin_BestFit getBestFit() {
-        return bestFit;
+    public void eliminarProceso(){
+      for(Proceso proceso: procesos)  {
+          proceso.setTiempo(proceso.getTiempo() - 1);
+      }
+      bestFit.Descalenderizar();
+      worstFit.Descalenderizar();
+      firstFit.Descalenderizar();
+      buddySystem.Descalenderizar();
+    }
+    
+    public void pedirMemoria(){
+        int index = (int) Math.floor(Math.random()*(0 - (firstFit.getProcesos().size()-1))+ (firstFit.getProcesos().size()-1)); 
+        int memoriaNueva = (int) Math.floor(Math.random()*(1-4+1)+4); 
+        firstFit.getProcesos().get(index).pedirMemoria(memoriaNueva);
+        firstFit.pedirMemoria(firstFit.getProcesos().get(index));
+        bestFit.pedirMemoria(firstFit.getProcesos().get(index));
+        worstFit.pedirMemoria(firstFit.getProcesos().get(index));
+        buddySystem.pedirMemoria(firstFit.getProcesos().get(index));
+         
+         
+        
+    }
+    
+    public void run(){
+        try {
+        int pedirMem = 0;
+        while(idProceso <= 100){
+            pedirMem ++;
+            TimeUnit.SECONDS.sleep(1);
+            agregarProceso();
+            eliminarProceso();
+            // QUITAR IMPRIMIR
+            imprimir();
+            if (pedirMem == 5){
+                pedirMemoria();
+                pedirMem = 0;
+            }
+        }
+        System.out.println(idProceso);
+       }catch(Exception e) {
+            System.out.println(e);
+        }
     }
 
-    public void setBestFit(Admin_BestFit bestFit) {
-        this.bestFit = bestFit;
+    public Admin_BestFit getBestFit() {
+        return bestFit;
     }
 
     public Admin_FirstFit getFirstFit() {
         return firstFit;
     }
 
-    public void setFirstFit(Admin_FirstFit firstFit) {
-        this.firstFit = firstFit;
-    }
-
     public Admin_WorstFit getWorstFit() {
         return worstFit;
     }
 
-    public void setWorstFit(Admin_WorstFit worstFit) {
-        this.worstFit = worstFit;
-    }
-
-    public ArrayList<Proceso> getProcesos() {
-        return procesos;
-    }
-
-    public void setProcesos(ArrayList<Proceso> procesos) {
-        this.procesos = procesos;
-    }
-
-    public int getIdProceso() {
-        return idProceso;
-    }
-
-    public void setIdProceso(int idProceso) {
-        this.idProceso = idProceso;
-    }
-
-    public int getTamMemoria() {
-        return tamMemoria;
-    }
-
-    public void setTamMemoria(int tamMemoria) {
-        this.tamMemoria = tamMemoria;
+    public Arbol getBuddySystem() {
+        return buddySystem;
     }
     
-    @Override
-    public void run(){
-        try {
-        int timAgregar = 0;
-        while(true){
-            TimeUnit.SECONDS.sleep(1);
-            timAgregar ++;
-            if (timAgregar == 5 ){
-                agregarProceso();
-                timAgregar = 0;
-            }
-            if (timAgregar == 3 ){
-                imprimir();
-            }
-            
-        }
-        }catch(Exception e) {
-            System.out.println(e);
-        }
-    }
+    
     
     public void imprimir(){
         int[] memBF = bestFit.getMemoria();
         int[] memFF = firstFit.getMemoria();
         int[] memWF = worstFit.getMemoria();
+        int[] memBS = buddySystem.getMemoria();
+        
         System.out.println("\n");
         System.out.println("\n");
         System.out.println("\n");
+        
         System.out.println("MemoriaBF");
         for(int  i= 0; i< memBF.length; i++ ){
              System.out.println(memBF[i]);
@@ -135,9 +135,15 @@ public class Controlador extends Thread{
         for(int  i= 0; i< memWF.length; i++ ){
              System.out.println(memWF[i]);
         }
+        System.out.println("MemoriaBS");
+        for(int  i= 0; i< memBS.length; i++ ){
+             System.out.println(memBS[i]);
+        }
     }
     
     }
+
+
     
 
     

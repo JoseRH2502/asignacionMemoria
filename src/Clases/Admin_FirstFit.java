@@ -56,16 +56,17 @@ public class Admin_FirstFit {
     }
     
     public boolean eliminarProceso(Proceso proceso){
-        boolean borrado = false;
-        for(Tupla asig: asignacion){
+        
+        for(int i =0; i<asignacion.size(); i++){
+            Tupla asig = asignacion.get(i);
             if (asig.getVar1() == proceso.getId()){
                 liberarMemoria(asig.getVar2(), asig.getVar3());
                 asignacion.remove(asig);
-                borrado = true;
-                break;
+                procesos.remove(proceso);
+                return true;
             }
         }
-        return borrado;
+        return false;
     }
     
     private void asignarMemoria(int pos, Proceso proceso){
@@ -109,16 +110,86 @@ public class Admin_FirstFit {
         }
     }
     
-    /* public void disminuirTiempo(){
-        for(Proceso proceso : procesos){
-            int tiempo = proceso.getTiempo() -1;
-            proceso.setTiempo(tiempo);
-            if (tiempo < 0){
+    public void pedirMemoria(Proceso proceso){
+        if(procesos.contains(proceso)){
+           for(int i = 0; i<asignacion.size(); i++){
+                Tupla asig = asignacion.get(i);
+                if(asig.getVar1() == proceso.getId()){
+                   
+                    if (buscarMasMemoriaDer(asig, proceso.getMemoriaNueva())){
+                        asignarMasMemoriaDer(asig, proceso.getMemoriaNueva());
+                        
+                    }else if (buscarMasMemoriaIzq(asig, proceso.getMemoriaNueva())){
+                        asignarMasMemoriaIzq(asig, proceso.getMemoriaNueva());
+                        break;
+                    }else{
+                        eliminarProceso(proceso);
+                        rechazados.add(proceso);
+                    }
+                    
+                }
+            }
+        }
+        
+    }
+    
+    private boolean buscarMasMemoriaIzq(Tupla tupla, int memoria){
+        if (tupla.getVar2() - memoria < 0){
+            return false;
+        }
+        
+        for(int i = tupla.getVar2()-memoria; i<tupla.getVar2(); i++){
+            if(this.memoria[i] != -1){
+                return false;
+            }
+        }
+        return true; 
+    }
+    
+     private boolean buscarMasMemoriaDer(Tupla tupla, int memoria){
+        
+        if (tupla.getVar2() + memoria + tupla.getVar3() > this.memoria.length){
+            return false;
+        }
+         
+        for(int i = tupla.getVar2() + tupla.getVar3(); i<tupla.getVar2() + tupla.getVar3() + memoria; i++){
+            
+            if(this.memoria[i] != -1){
+                return false;
+            }
+        }
+        return true; 
+    }
+     
+     private void asignarMasMemoriaIzq( Tupla tupla, int memoria ){
+        for(int i = tupla.getVar2()-memoria; i<tupla.getVar2(); i++){
+            if(this.memoria[i] == -1){
+               this.memoria[i] = tupla.getVar1();
+            }
+        }
+        tupla.setVar2(tupla.getVar2()- memoria);
+        tupla.setVar3(memoria + tupla.getVar3());
+    }
+    
+     private void asignarMasMemoriaDer(Tupla tupla, int memoria){
+        for(int i = tupla.getVar2() + tupla.getVar3(); i<tupla.getVar2() + tupla.getVar3() + memoria; i++){
+            if(this.memoria[i] == -1){
+                 this.memoria[i] = tupla.getVar1();
+            }
+        }
+        tupla.setVar3(memoria + tupla.getVar3());
+        
+    }
+    
+      public void Descalenderizar(){
+        for(int i = 0; i< procesos.size(); i++){
+            Proceso proceso = procesos.get(i);
+            if (proceso.getTiempo() == 0){
                 eliminarProceso(proceso);
             }
         }
             
-    }*/
+    }
 
     public ArrayList<Proceso> getProcesos() {
         return procesos;

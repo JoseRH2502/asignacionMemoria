@@ -11,21 +11,27 @@ package Clases;
  */
 public class Proceso {
     private int id;
-    private int memoria; 
+    private int memoriaInicial; 
+    private int memoriaSolicitada; 
     private int tiempo; 
 
     public Proceso(int id, int memoria, int tiempo) {
         this.id = id;
-        this.memoria = memoria;
+        this.memoriaInicial = memoria;
+        this.memoriaSolicitada =  0;
         this.tiempo = tiempo;
     }
 
     public int getMemoria() {
-        return memoria;
+        return memoriaInicial;
+    }
+    
+    public int getMemoriaNueva() {
+        return memoriaSolicitada;
     }
 
     public void setMemoria(int memoria) {
-        this.memoria = memoria;
+        this.memoriaInicial = memoria;
     }
 
     public int getTiempo() {
@@ -43,16 +49,14 @@ public class Proceso {
     public void setId(int id) {
         this.id = id;
     }
+    
+    public void pedirMemoria(int num){
+        memoriaSolicitada += num;
+    }
 
     @Override
     public String toString() {
-        return "Proceso{" + "id=" + id + ", memoria=" + memoria + ", tiempo=" + tiempo + '}';
-    }
-
-   
-    
-
-   
-    
+        return "Proceso{" + "id=" + id + ", memoria=" + memoriaInicial + ", tiempo=" + tiempo + '}';
+    } 
     
 }

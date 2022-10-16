@@ -18,6 +18,7 @@ public class Arbol {
     private int[] memoria;
     private int idNode; 
     private Node nodoActual;
+    private ArrayList<Proceso> procesos;
     private ArrayList<Proceso> rechazados;
    
 
@@ -25,6 +26,7 @@ public class Arbol {
         idNode = 0;
         arbol = new ArrayList<>();
         rechazados = new ArrayList<>();
+        procesos = new ArrayList<>();
         memoria= new int[tam];
         Node root = new Node(0,-2,tam);
         this.arbol.add(root);  
@@ -39,11 +41,14 @@ public class Arbol {
             if(arbol.size() == 1){
                 subArbolIzquierdo(proceso);
                 nodoActual.setProceso(proceso);
+                procesos.add(proceso);
             }else{
                hojaLibre(proceso);
                subArbolIzquierdo(proceso);
                nodoActual.setProceso(proceso);
+               procesos.add(proceso);
             }
+           
          }else{
              rechazados.add(proceso);
              //System.out.println("Rechazado " + proceso.getId());
@@ -53,8 +58,8 @@ public class Arbol {
     
     
     public void subArbolIzquierdo(Proceso proceso){
-        //System.out.println(nodoActual.getMemoria()/2 >= proceso.getMemoria());
-        while (nodoActual.getMemoria()/2 >= proceso.getMemoria()){
+        //System.out.println("Memoria: " + nodoActual.getMemoria() /2 + " Prceso : " + (proceso.getMemoria() + proceso.getMemoriaNueva()));
+        while (nodoActual.getMemoria() /2 >= proceso.getMemoria() + proceso.getMemoriaNueva()){
             idNode ++;
             Node izquierdo = new Node(idNode,nodoActual.getId(), nodoActual.getMemoria()/2);
             idNode ++;
@@ -73,7 +78,6 @@ public class Arbol {
         for (int i=0; i< memoria.length; i++){
             if(nodoActual.getId() == memoria[i]){
                 dividirMemoriaAux(i,nodoActual.getMemoria()/2, nodoActual.getHijoIzquierdo());
-                //System.out.println( nodoActual.getHijoDerecho() );
                 dividirMemoriaAux(i + nodoActual.getMemoria()/2 ,nodoActual.getMemoria()/2, nodoActual.getHijoDerecho());
                 break;
             }
@@ -93,7 +97,6 @@ public class Arbol {
     private void hojaLibre(Proceso proceso){
         for (int i=0; i< memoria.length; i++){
             Node nodo = recuperarNodo(memoria[i]);
-            
             if(nodo.getProceso() == null){
                if(nodo.getMemoria() >= proceso.getMemoria()){
                    //System.out.println("Nodo elegido:" +nodo.getId());
@@ -106,7 +109,8 @@ public class Arbol {
     }
     
     private Node recuperarNodo(int idNode){
-        for(Node nodo: arbol){
+        for(int i = 0; i< arbol.size(); i++){
+            Node nodo = arbol.get(i);
             if (nodo.getId() == idNode){
                 return nodo;
             }
@@ -115,28 +119,31 @@ public class Arbol {
     }
     
     public void eliminarProceso(Proceso proceso){
-        nodoActual = buscarNodo(proceso);
-        nodoActual.setProceso(null);
-        Boolean nodoBorrable = true;
         
-        while(nodoBorrable){
-            if (nodoActual.getPadre() == -2 ){
-                break;
-            }
-            Node padre = recuperarNodo(nodoActual.getPadre());
-            Node der = recuperarNodo(padre.getHijoDerecho());
-            Node izq = recuperarNodo(padre.getHijoIzquierdo());
-            if((der.getProceso() == null  && izq.getProceso() == null) && (esHoja(der.getId())) && esHoja(izq.getId()) ){
-                liberarMemoria(izq.getId(), der.getId(), padre.getId());
-                padre.setHijoDerecho(-1);
-                padre.setHijoIzquierdo(-1);
-                arbol.remove(izq);
-                arbol.remove(der);
-                nodoActual = padre;
-            }else{
-                nodoBorrable  = false;
-            }
+        nodoActual = buscarNodo(proceso);
+        if(nodoActual != null){
+           nodoActual.setProceso(null);
+           Boolean nodoBorrable = true;
+           while(nodoBorrable){
+               if (nodoActual.getPadre() == -2 ){
+                   break;
+               }
+               Node padre = recuperarNodo(nodoActual.getPadre());
+               Node der = recuperarNodo(padre.getHijoDerecho());
+               Node izq = recuperarNodo(padre.getHijoIzquierdo());
+               if((der.getProceso() == null  && izq.getProceso() == null) && (esHoja(der.getId())) && esHoja(izq.getId()) ){
+                   liberarMemoria(izq.getId(), der.getId(), padre.getId());
+                   padre.setHijoDerecho(-1);
+                   padre.setHijoIzquierdo(-1);
+                   arbol.remove(izq);
+                   arbol.remove(der);
+                   nodoActual = padre;
+               }else{
+                   nodoBorrable  = false;
+               }
+           }
         }
+       
     }
     
     private boolean esHoja(int IDnodo){
@@ -195,6 +202,43 @@ public class Arbol {
         }
         return false;
        
+    }
+     
+    public void Descalenderizar(){
+        for(int i = 0; i< procesos.size(); i++){
+            Proceso proceso = procesos.get(i);
+            if (proceso.getTiempo() == 0){
+                eliminarProceso(proceso);
+            }
+        }
+            
+    }
+     
+    public void pedirMemoria(Proceso proceso){
+        for(int i = 0; i< arbol.size();i++){
+            if(arbol.get(i).getProceso() == proceso){
+                Node padre =  recuperarNodo(arbol.get(i).getPadre());
+                if(esHoja(padre.getHijoIzquierdo()) && (recuperarNodo(padre.getHijoIzquierdo()).getProceso() == null) ){
+                    liberarMemoria(padre.getHijoIzquierdo(), padre.getHijoDerecho(), padre.getId());
+                    arbol.remove(recuperarNodo(padre.getHijoIzquierdo()));
+                    arbol.remove(recuperarNodo(padre.getHijoDerecho()));
+                    nodoActual = padre;
+                    subArbolIzquierdo(proceso);
+                    nodoActual.setProceso(proceso);
+                }else if(esHoja(padre.getHijoDerecho()) && (recuperarNodo(padre.getHijoDerecho()).getProceso() == null)){
+                    liberarMemoria(padre.getHijoIzquierdo(), padre.getHijoDerecho(), padre.getId());
+                    arbol.remove(recuperarNodo(padre.getHijoIzquierdo()));
+                    arbol.remove(recuperarNodo(padre.getHijoDerecho())); 
+                    nodoActual = padre;
+                    subArbolIzquierdo(proceso);
+                    nodoActual.setProceso(proceso);
+                    
+                }else{
+                    eliminarProceso(proceso);
+                    rechazados.add(proceso);
+                }
+            }
+        }
     }
      
      
