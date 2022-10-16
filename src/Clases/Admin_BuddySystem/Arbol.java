@@ -19,7 +19,7 @@ public class Arbol {
     private int idNode; 
     private Node nodoActual;
     private ArrayList<Proceso> procesos;
-    private ArrayList<Proceso> rechazados;
+    public ArrayList<Proceso> rechazados;
    
 
     public Arbol(int tam) {
@@ -73,6 +73,38 @@ public class Arbol {
         }
 
     }
+    
+         
+         
+    public  HashMap getBloqueMemoria(){
+        HashMap bloqueMemoria =  new HashMap();  
+        boolean isFirst = true;
+        int posMemoria = 0;
+        int tam = 0;
+        int[] memoriaTraducida = memoriaTraducida();
+        for(int i=0; i<memoriaTraducida.length; i++){
+            tam ++;
+            if (memoriaTraducida[i] == -1){
+                if (isFirst){
+                    posMemoria = i;
+                    isFirst = false;
+                    bloqueMemoria.put(posMemoria, tam);
+                }
+                bloqueMemoria.replace(posMemoria, tam);  
+            }else{
+                tam = 0;
+                isFirst = true;
+                posMemoria = 0;
+            }
+        
+        }
+        return bloqueMemoria;
+}
+         
+         
+         
+     
+        
     
     private void dividirMemoria(){
         for (int i=0; i< memoria.length; i++){

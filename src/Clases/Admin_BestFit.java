@@ -37,6 +37,8 @@ public class Admin_BestFit {
     public void agregarProceso(Proceso proceso){
         bestFit(proceso);
     }
+    
+    
     private void bestFit(Proceso proceso){	
         int bestIdx = -1;
         Iterator iterator = bloqueMemoria.entrySet().iterator();
@@ -204,6 +206,16 @@ public class Admin_BestFit {
         }
             
     }
+     
+     public int getMemoriaDisponible(){
+         int cont = 0;
+         for (int i = 0; i < this.memoria.length; i++) {
+             if(this.memoria[i]==-1){
+                 cont++;
+             }
+         }
+         return cont;
+     }
         
     public ArrayList<Proceso> getProcesos() {
         return procesos;

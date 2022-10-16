@@ -18,7 +18,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.concurrent.TimeUnit;
 
-public class Controlador {
+public class Controlador extends Thread{
     Admin_BestFit bestFit;
     Admin_FirstFit firstFit;
     Admin_WorstFit worstFit;
@@ -74,6 +74,7 @@ public class Controlador {
         
     }
     
+    @Override
     public void run(){
         try {
         int pedirMem = 0;
