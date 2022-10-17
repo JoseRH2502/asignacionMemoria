@@ -38,17 +38,18 @@ public class Controlador extends Thread{
     }
     
     public void agregarProceso(){
+      
        int memoriaInicial = (int) Math.floor(Math.random()*(1-8+1)+8); 
-       //int tiempo = (int) Math.floor(Math.random()*(29-301+1)+301); 
        int tiempo = (int) Math.floor(Math.random()*(10-60+1)+60); 
-       Proceso  proceso = new Proceso(idProceso, memoriaInicial, tiempo);
-       procesos.add(proceso);
-       idProceso ++;
+      
+        Proceso  proceso = new Proceso(idProceso, memoriaInicial, tiempo);
+        procesos.add(proceso);
+        bestFit.agregarProceso(proceso);
+        firstFit.agregarProceso(proceso);
+        worstFit.agregarProceso(proceso);
+        buddySystem.agregarProceso(proceso);
        
-       bestFit.agregarProceso(proceso);
-       firstFit.agregarProceso(proceso);
-       worstFit.agregarProceso(proceso);
-       buddySystem.agregarProceso(proceso);
+        idProceso ++;
     }
     
     public void eliminarProceso(){
@@ -68,29 +69,35 @@ public class Controlador extends Thread{
         firstFit.pedirMemoria(firstFit.getProcesos().get(index));
         bestFit.pedirMemoria(firstFit.getProcesos().get(index));
         worstFit.pedirMemoria(firstFit.getProcesos().get(index));
-        buddySystem.pedirMemoria(firstFit.getProcesos().get(index));
-         
-         
-        
+        buddySystem.pedirMemoria(firstFit.getProcesos().get(index));   
     }
     
+  
     @Override
     public void run(){
         try {
         int pedirMem = 0;
+        int agregarProceso = 0;
         while(idProceso <= 100){
             pedirMem ++;
+            agregarProceso ++;
             TimeUnit.SECONDS.sleep(1);
-            agregarProceso();
+           
             eliminarProceso();
             // QUITAR IMPRIMIR
-            imprimir();
-            if (pedirMem == 5){
+            //imprimir();
+            
+            if (agregarProceso== 2){
+                agregarProceso();
+                agregarProceso = 0;
+            }
+            
+            if (pedirMem == 30){
                 pedirMemoria();
                 pedirMem = 0;
             }
         }
-        System.out.println(idProceso);
+        System.out.println("SIMULACIÓN TERMINADA");
        }catch(Exception e) {
             System.out.println(e);
         }
@@ -111,6 +118,8 @@ public class Controlador extends Thread{
     public Arbol getBuddySystem() {
         return buddySystem;
     }
+    
+    
     
     
     
